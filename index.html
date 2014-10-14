@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Automatização de builds com Maven e Gradle</title>
+
+		<meta name="description" content="Automatização de builds com Maven e Gradle">
+		<meta name="author" content="Alexssandro A. Reis">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+		<script>
+			if( window.location.search.match( /print-pdf/gi ) ) {
+				var link = document.createElement( 'link' );
+				link.rel = 'stylesheet';
+				link.type = 'text/css';
+				link.href = 'css/print/pdf.css';
+				document.getElementsByTagName( 'head' )[0].appendChild( link );
+			}
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>PROPENSO A ERROS
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h2>Automatização de builds com Maven e Gradle</h2>
+					<p>
+						<small>Autor:<a href="https://www.linkedin.com/profile/view?id=133895032">Alexssandro A. Reis</a> / <a href="http://twitter.com/alereis">@alereis</a></small>
+					</p>
+				</section>
+
+				<section>
+					<h2>O processo de build</h2>
+					<ul>
+					  <li>Compilação</li> 
+					  <li>Empacotamento</li>
+					  <li>Distribuição</li>					  
+					</ul>
+				</section>
+
+				<!-- Example of nested vertical slides -->
+				<section>
+					<section>
+						<h2>Como eram feitos?</h2>
+						<p>
+						  Os builds eram feitos de forma manual.
+						</p>
+					</section>
+					<section>
+						<h2>Propenso a erros</h2>
+						<p>
+						  <img src="error_prone.jpg"></img>
+						</p>
+					</section>
+					<section>
+						<h2>Tedioso</h2>
+						<p>
+						  <img src="tedio.jpg"></img>
+						</p>
+					</section>
+					<section>
+						<h2>Demorado</h2>
+						<p>
+						  <img src="demorado.jpg"></img>
+						</p>
+					</section>
+					<section>
+						<h2>Complicado</h2>
+						<p>
+						  <img src="complicado.gif"></img>
+						</p>
+					</section>
+					<section data-markdown>
+						<h2>Exemplo</h2>
+						<pre>
+						  <code data-trim>
+						      javac Compute.java Task.java
+						      mkdir target
+						      cd target
+						      cp ../*.class .
+						      jar cvf compute.jar *.class
+						      tar -zcf compute.tar comput.jar
+						      scp -i key user:pass@host.com:/home/user/deploy
+						  </code>
+						</pre>
+					</section>
+				</section>
+
+				<section>
+				  <section>
+					<h2>Apache Ant</h2>
+					<p>
+					  <img src="ant.jpeg"></ant>
+					</p>
+				  </section>
+				  
+				  <section>
+					<h2>Pontos positivos</h2>
+					<ul>
+					  <li>Execução de tarefas</li>
+					  <li>Extensível</li>
+					  <li>Externaliza suas configurações</li>
+					  <li>Integração com ferramentas de CI</li>
+					</ul>
+				  </section>
+				  
+				  <section>
+					<h2>Pontos negativos</h2>
+					<ul>
+					  <li>Utilização de descritor XML</li>
+					  <li>Tratamento de exceção limitado</li>
+					  <li>Gerenciamento de dependências de forma manual</li>
+					</ul>
+				  </section>
+
+				  <section>
+					<h2>Arquivo build.xml</h2>
+					<pre>
+					  <code data-trim>
+&lt;project name="myProject" default="build" basedir="."&gt; 
+  &lt;description&gt; My Project's Description &lt;/description&gt; 
+  &lt;property name="build" location="build" /&gt; 
+					      
+  &lt;target name="init"&gt; 
+    &lt;mkdir dir="${build}" /&gt; 
+  &lt;/target&gt;
+					
+  &lt;target name="clean"&gt; 
+    &lt;delete dir="${build}" /&gt; 
+  &lt;/target&gt; 
+&lt;/project&gt;
+					  </code>
+					</pre>
+				  </section>
+				  
+				  <section>
+					<h2>Exemplo de execução</h2>
+					
+					<img src="ant_build.jpg"/>
+					
+				  </section>
+				  
+				</section>
+
+				<section>
+				  <section>
+				    <h2>Apache Maven</h2>
+				    <p>
+				      <img src="maven.png" style="background-color: white"/>
+				    </p>
+				  </section>
+				  
+				  <section>
+				    <h2>Pontos positivos</h2>
+				    <ul>
+				      <li>Extensível através de plugins</li>
+				      <li>Externaliza suas configurações</li>
+				      <li>Integração com ferramentas de CI</li>
+				      <li>Gerenciamento de dependências</li>
+				      <li>Suporte a múltiplos módulos de forma fácil</li>
+				      <li>Execução de testes</li>
+				      <li>Integração com ant</li>
+				      <li>Comunidade ativa</li>
+				    </ul>
+				  </section>
+				  
+				  <section>
+				    <h2>Pontos negativos</h2>
+				    <ul>
+				      <li>Utilização de descritor XML</li>
+				      <li>Aprendizagem demorada se comparado ao Ant</li>
+				      <li>Repositórios privados não são seguros</li>
+				      <li>Ciclo de vida limitado</li>
+				    </ul>
+				  </section>
+
+				  <section>
+				    <h2>Estrutura do projeto</h2>
+				    <pre>
+				      <code>					
+|-- pom.xml
+`-- target
+`-- src
+    |-- main
+    |   `-- java
+    |       `--pacote
+    |          `-- App.java
+    `-- test
+        `-- java
+            `-- pacote
+                `-- AppTest.java
+				      </code>
+				    </pre>
+				  </section>
+				  
+				  <section>
+				    <h2>A pasta .m2</h2>
+				    <p>
+				      Contém todas as dependências já baixadas pelo maven
+				    </p>
+				  </section>
+				  
+				  <section>
+				    <h2>pom.xml (Project Object Model)</h2>
+				    <pre>
+				      <code data-trim>
+&lt;project&gt;
+  &lt;modelVersion /&gt;
+  &lt;groupId /&gt; 
+  &lt;artifactId /&gt;
+  &lt;version /&gt; 
+&lt;/project&gt;
+
+				      </code>
+				    </pre>
+				  </section>
+				  
+				  <section>
+				    <h2>Dependências</h2>
+				    <pre>
+				      <code>
+&lt;dependencies&gt;				      
+  &lt;dependency&gt;
+    &lt;groupId /&gt;
+    &lt;artifactId /&gt;
+    &lt;version /&gt;
+    &lt;scope /&gt;
+  &lt;/dependency&gt;
+&lt;/dependencies&gt;
+				      </code>
+				    </pre>
+				  </section>
+				  
+				  <section>
+				    <h2>Plugins</h2>
+				    <pre>
+				      <code>
+&lt;plugins&gt;				      
+  &lt;plugin&gt;
+    &lt;groupId /&gt;
+    &lt;artifactId /&gt;
+    &lt;version /&gt;
+    &lt;executions&gt;
+      &lt;execution&gt;
+	&lt;phase /&gt;
+	&lt;goals&gt;
+	  &lt;goal /&gt;
+	&lt;/goals&gt;
+      &lt;/execution&gt;
+    &lt;/executions&gt;
+  &lt;/plugin&gt;
+&lt;/plugins&gt;
+				      </code>
+				    </pre>
+				  </section>
+				  
+				  <section>
+				    <h2>Distribuição</h2>
+				    <pre>
+				      <code>
+&lt;distributionManagement&gt;
+  &lt;repository&gt;
+    &lt;id /&gt;
+    &lt;url /&gt;
+  &lt;/repository&gt;
+  &lt;snapshotRepository&gt;
+    &lt;id /&gt;
+    &lt;url /&gt;
+  &lt;/snapshotRepository&gt;
+&lt;/distributionManagement&gt;
+				      </code>
+				    </pre>
+				  </section>
+				  
+				  <section>
+				    <h2>Repositórios</h2>
+				    <pre>
+				      <code>
+&lt;repositories&gt;
+  &lt;repository&gt;
+    &lt;id /&gt;
+    &lt;url /&gt;
+  &lt;/repository&gt;
+&lt;/repositories&gt;
+				      </code>
+				    </pre>
+				  </section>
+				  
+				  <section>
+				    <h2>Execução de builds</h2>
+				    <pre>
+				      <code>
+					mvn clean package deploy
+				      </code>
+				    </pre>
+				  </section>
+				  
+				  <section>
+				    <h2>Exemplo de console</h2>
+				    <p>
+				      <img src="maven_console.jpg"/>
+				    </p>
+				  </section>				  
+				</section>
+				
+				<section>
+				  <section>
+				    <h2>Gradle</h2>
+				    <p>
+				      <img style="background-color: white;" src="gradle.png" />
+				    </p>
+				  </section>
+				    
+				  <section>
+				    <h2>Pontos positivos</h2>
+				    <ul>
+				      <li>Extensível através de plugins</li>
+				      <li>Externaliza suas configurações</li>
+				      <li>Integração com ferramentas de CI</li>
+				      <li>Gerenciamento de dependências</li>
+				      <li>Suporte a múltiplos módulos de forma fácil</li>
+				      <li>Execução de testes</li>
+				      <li>Integração com ant</li>
+				      <li>Utilização de scripts Groovy</li>				      
+				    </ul>
+				  </section>
+				  
+				  <section>
+				    <h2>Pontos negativos</h2>
+				    <ul>
+				      <li>Peformance</li>				      
+				    </ul>
+				  </section>
+				  
+				  <section>
+				    <h2>Estrutura do projeto</h2>
+				    <pre>
+				      <code>					
+|-- settings.gradle
+`-- build.gradle
+`-- gradle
+    |-- wrapper
+        |-- gradle-wrapper.jar
+        `-- gradle-wrapper.properties
+`-- src
+    |-- main
+    |   `-- java
+    |       `-- pacote
+    |           `-- App.java
+    `-- test
+        `-- java
+            `-- pacote
+                `-- AppTest.java
+				      </code>
+				    </pre>
+				  </section>
+				  
+				   <section>
+				    <h2>build.gradle</h2>
+				    <pre>
+				      <code>					
+apply plugin: 'java'
+
+sourceCompatibility = 1.5
+version = '1.0'
+
+repositories {
+  mavenCentral()
+}
+
+dependecies {
+  compile group: 'groupId', name: 'artifactId', version: 'version'
+  testCompile group: 'groupId', name: 'artifactId', version: 'version'
+}
+				      </code>
+				    </pre>
+				  </section>	
+				  
+				  <section>
+				    <h2>Dependências</h2>
+				    <pre>
+				      <code>					
+dependecies {
+  compile group: 'groupId', name: 'artifactId', version: 'version'
+  testCompile group: 'groupId', name: 'artifactId', version: 'version'
+}
+				      </code>
+				    </pre>
+				  </section>	
+				  
+				  <section>
+				    <h2>Repositórios</h2>
+				    <pre>
+				      <code>					
+repositories {
+  mavenCentral()
+  
+  maven {
+    url "http://repo.mycompany.com/maven2"
+  }
+  
+  ivy {
+    url "http://repo.mycompany.com/repo"
+  }
+}
+				      </code>
+				    </pre>
+				  </section>
+				  
+				  <section>
+				    <h2>Tarefas</h2>
+				    <pre>
+				      <code>					
+task hello &lt;&lt; {
+    println 'Hello world!'
+}
+task intro(dependsOn: hello) &lt;&lt; {
+    println "I'm Gradle"
+}
+				      </code>
+				    </pre>
+				  </section>
+				  
+				  <section><h3>BY Hakim El Hattab / hakim.se</h3>
+				    <h2>Plugins</h2>
+				    <pre>
+				      <code>					
+apply plugin: 'java' //binários
+apply from: 'other.gradle' //scripts
+				      </code>
+				    </pre>
+				  </section>
+				  
+				  <section>
+				    <h2>Deploy</h2>
+				    <pre>
+				      <code>					
+apply plugin: 'maven'
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      repository(url: "file://localhost/tmp/myRepo/")
+    }
+    
+    ivy {
+      credentials {
+	username "username"
+	password "pw"
+      }
+      url "http://repo.mycompany.com"
+    }
+  }
+}
+				      </code>
+				    </pre>
+				  </section>
+				  
+				  
+				</section>
+				  
+				<section>
+				  <h1>Duvidas?</h1>				  
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Parallax scrolling
+				// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+				// parallaxBackgroundSize: '2100px 900px',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
